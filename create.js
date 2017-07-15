@@ -13,7 +13,7 @@ export async function main(event, context, callback) {
             note_id: uuid.v1(),
             content: data.content,
             attachment: data.attachment,
-            createdAt: new Date().getTime(),
+            created_at: new Date().getTime(),
         },
     };
 
