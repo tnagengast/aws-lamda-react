@@ -1,0 +1,13 @@
+{
+    "body": "{\"content\":\"test world\",\"attachment\":\"new.jpg\"}",
+    "pathParameters": {
+        "id": "2dbf4930-6915-11e7-81d9-25f2756bc36b"
+    },
+    "requestContext": {
+        "authorizer": {
+            "claims": {
+                "sub": "USER-SUB-1234"
+            }
+        }
+    }
+}
