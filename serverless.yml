@@ -1,13 +1,17 @@
-service: dot
+service: notes-app-api
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
+# Use serverless-webpack plugin to transpile ES6/ES7
+plugins:
+  - serverless-webpack
+
+# Enable auto-packing of external modules
+custom:
+  webpackIncludeModules: true
 
 provider:
     name: aws
     runtime: nodejs6.10
-    # stage: dev
+    stage: prod
     region: us-west-2
 
 
