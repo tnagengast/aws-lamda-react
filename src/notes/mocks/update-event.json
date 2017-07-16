@@ -1,7 +1,7 @@
 {
-    "body": "{\"content\":\"test world\",\"attachment\":\"new.jpg\"}",
+    "body": "{\"content\":\"yo, the world says hey\"}",
     "pathParameters": {
-        "id": "83f5c990-69c0-11e7-86d5-63c9cab983b1"
+        "id": "a8b5ad20-69c2-11e7-bb51-110a79816488"
     },
     "requestContext": {
         "authorizer": {

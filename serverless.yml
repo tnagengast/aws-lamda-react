@@ -24,8 +24,8 @@ provider:
         Resource: "arn:aws:dynamodb:us-west-2:*:*"
 
 functions:
-    create:
-        handler: main.Note.create
+    notes-create:
+        handler: notes-create.main
         events:
             - http:
                 path: notes
@@ -34,8 +34,8 @@ functions:
                 authorizer:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
-    get:
-        handler: main.Note.get
+    notes-get:
+        handler: notes-get.main
         events:
             - http:
                 path: notes/{id}
@@ -44,8 +44,8 @@ functions:
                 authorizer:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
-    list:
-        handler: main.Note.list
+    notes-list:
+        handler: notes-list.main
         events:
             - http:
                 path: notes
@@ -54,8 +54,8 @@ functions:
                 authorizer:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
-    update:
-        handler: main.Note.update
+    notes-update:
+        handler: notes-update.main
         events:
             - http:
                 path: notes/{id}
@@ -64,8 +64,8 @@ functions:
                 authorizer:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
-    delete:
-        handler: main.Note.delete
+    notes-delete:
+        handler: notes-delete.main
         events:
             - http:
                 path: notes/{id}
