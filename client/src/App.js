@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 import NoteList from './containers/NoteList';
 import NoteDetail from './containers/NoteDetail';
-import './styles/App.css';
+import './styles/css/App.css';
 
 // class App extends Component {
 //
