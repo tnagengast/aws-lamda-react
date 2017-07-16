@@ -7,19 +7,21 @@ let dotenv = require('dotenv')
 process.env.NODE_ENV = 'production';
 
 module.exports = {
-    // Use all js files in project root (except the webpack config) as an entry
-    entry: globEntries('!(webpack.config).js'),
+
+    entry: path.resolve('lambda'),
+
     target: 'node',
-    // Since 'aws-sdk' is not compatible with webpack,
-    // we exclude all node dependencies
+
     externals: [nodeExternals()],
-    // Run babel on all .js files and skip those in node_modules
+
     module: {
         rules: [{
             test: /\.js$/,
             loader: 'babel-loader',
-            include: __dirname,
+            // include: __dirname,
             exclude: /node_modules/,
+
+            // loader: 'babel-loader' + Mix.babelConfig()
         }]
     },
     // We are going to create multiple APIs in this guide, and we are
@@ -31,14 +33,14 @@ module.exports = {
     },
 };
 
-function globEntries(globPath) {
-    var files = glob.sync(globPath);
-    var entries = {};
-
-    for (var i = 0; i < files.length; i++) {
-        var entry = files[i];
-        entries[path.basename(entry, path.extname(entry))] = './' + entry;
-    }
-
-    return entries;
-}
+// function globEntries(globPath) {
+//     var files = glob.sync(globPath);
+//     var entries = {};
+//
+//     for (var i = 0; i < files.length; i++) {
+//         var entry = files[i];
+//         entries[path.basename(entry, path.extname(entry))] = './' + entry;
+//     }
+//
+//     return entries;
+// }

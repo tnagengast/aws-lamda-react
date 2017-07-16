@@ -1,16 +1,17 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "name": "client",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "deploy": "react-scripts build && aws s3 sync build/ s3://dev-notes-app-client && aws cloudfront create-invalidation --distribution-id E39BT4H2ZSEAAZ --paths '/*'",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject"
+    },
+    "dependencies": {
+        "react": "^15.6.1",
+        "react-dom": "^15.6.1",
+        "react-scripts": "1.0.10"
+    }
 }

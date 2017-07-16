@@ -25,7 +25,7 @@ provider:
 
 functions:
     create:
-        handler: create.main
+        handler: main.Note.create
         events:
             - http:
                 path: notes
@@ -35,7 +35,7 @@ functions:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
     get:
-        handler: get.main
+        handler: main.Note.get
         events:
             - http:
                 path: notes/{id}
@@ -45,7 +45,7 @@ functions:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
     list:
-        handler: list.main
+        handler: main.Note.list
         events:
             - http:
                 path: notes
@@ -55,7 +55,7 @@ functions:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
     update:
-        handler: update.main
+        handler: main.Note.update
         events:
             - http:
                 path: notes/{id}
@@ -65,7 +65,7 @@ functions:
                     arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
 
     delete:
-        handler: delete.main
+        handler: main.Note.delete
         events:
             - http:
                 path: notes/{id}
