@@ -8,7 +8,7 @@ process.env.NODE_ENV = 'production';
 
 module.exports = {
 
-    entry: path.resolve('lambda'),
+    entry: path.resolve('./src/lambda'),
 
     target: 'node',
 

@@ -1,7 +1,6 @@
 {
-    "body": "{\"content\":\"test world\",\"attachment\":\"new.jpg\"}",
     "pathParameters": {
-        "id": "2a853130-6933-11e7-8f66-1b9791f60b80"
+        "id": "83f5c990-69c0-11e7-86d5-63c9cab983b1"
     },
     "requestContext": {
         "authorizer": {

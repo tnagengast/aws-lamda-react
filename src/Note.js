@@ -6,8 +6,9 @@ import { success, failure } from './response';
 
 export default class Note {
 
-    // test: sls webpack invoke --function list --path mocks/create-event.json
+    // test: sls webpack invoke --function create --path mocks/notes/create-event.json
     static async create(event, context, callback) {
+        console.log('creating...\n');
         const data = JSON.parse(event.body);
 
         const params = {
@@ -30,7 +31,7 @@ export default class Note {
         }
     }
 
-    // test: sls webpack invoke --function list --path mocks/list-event.json
+    // test: sls webpack invoke --function list --path mocks/notes/list-event.json
     static async list(event, context, callback) {
         const params = {
             TableName: 'notes',
@@ -50,7 +51,7 @@ export default class Note {
         }
     }
 
-    // test: sls webpack invoke --function list --path mocks/get-event.json
+    // test: sls webpack invoke --function get --path mocks/notes/get-event.json
     static async get(event, context, callback) {
         const params = {
             TableName: 'notes',
@@ -74,7 +75,7 @@ export default class Note {
         }
     }
 
-    // test: sls webpack invoke --function list --path mocks/update-event.json
+    // test: sls webpack invoke --function update --path mocks/notes/update-event.json
     static async update(event, context, callback) {
         const data = JSON.parse(event.body);
         const params = {
@@ -100,7 +101,7 @@ export default class Note {
         }
     }
 
-    // test: sls webpack invoke --function list --path mocks/delete-event.json
+    // test: sls webpack invoke --function delete --path mocks/notes/delete-event.json
     static async delete(event, context, callback) {
         const params = {
             TableName: 'notes',
