@@ -1,7 +1,7 @@
-var path = require('path');
-var glob = require('glob');
-var nodeExternals = require('webpack-node-externals');
-let dotenv = require('dotenv')
+let path = require('path');
+let glob = require('glob');
+let nodeExternals = require('webpack-node-externals');
+let dotenv = require('dotenv');
 
 process.env.NODE_ENV = 'production';
 
@@ -31,12 +31,12 @@ module.exports =
 
 function globEntries(globPath) {
 
-    var directory = path.dirname(globPath).split('/').pop()
-    var files = glob.sync(globPath);
-    var entries = {};
+    let directory = path.dirname(globPath).split('/').pop()
+    let files = glob.sync(globPath);
+    let entries = {};
 
-    for (var i = 0; i < files.length; i++) {
-        var entry = files[i];
+    for (let i = 0; i < files.length; i++) {
+        let entry = files[i];
         entries[directory + '-' + path.basename(entry, path.extname(entry))] = './' + entry;
     }
 

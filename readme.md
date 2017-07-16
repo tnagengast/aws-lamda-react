@@ -1,5 +1,5 @@
 # Riptide Notes
 
-Lambda `'./src'`
+Lambda ```'./src'```
 
-React `'./client'`
+React ```'./client'```
