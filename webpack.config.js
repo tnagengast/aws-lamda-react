@@ -5,7 +5,7 @@ let dotenv = require('dotenv');
 
 process.env.NODE_ENV = 'production';
 
-module.exports =
+module.exports = {
 
     entry: globEntries('src/notes/!(webpack.config).js'),
 
