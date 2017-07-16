@@ -4,7 +4,7 @@ import { invokeApig, s3Upload } from '../aws';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
-import './Notes.css';
+import '../styles/css/Notes.css';
 
 class Notes extends Component {
     constructor(props) {

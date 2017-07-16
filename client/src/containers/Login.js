@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom';
 import React, { Component } from 'react';
 import config from '../config.js';
-import './Login.css';
+import '../styles/css/Login.css';
 import {
     FormGroup,
     FormControl,

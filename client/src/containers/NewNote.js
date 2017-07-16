@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { FormGroup, FormControl, ControlLabel, } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
-import './NewNote.css';
+import '../styles/css/NewNote.css';
 import { invokeApig, s3Upload } from '../aws';
 
 class NewNote extends Component {

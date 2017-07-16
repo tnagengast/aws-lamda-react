@@ -1,7 +1,6 @@
 let path = require('path');
 let glob = require('glob');
 let nodeExternals = require('webpack-node-externals');
-let dotenv = require('dotenv');
 
 process.env.NODE_ENV = 'production';
 

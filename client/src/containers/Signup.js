@@ -5,7 +5,7 @@ import { AuthenticationDetails, CognitoUserPool, CognitoUserAttribute } from 'am
 
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
-import './Signup.css';
+import '../styles/css/Signup.css';
 
 class Signup extends Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 {
     "body": "{\"content\":\"yo, the world says hey\"}",
     "pathParameters": {
-        "id": "a8b5ad20-69c2-11e7-bb51-110a79816488"
+        "id": "2a853130-6933-11e7-8f66-1b9791f60b80"
     },
     "requestContext": {
         "authorizer": {

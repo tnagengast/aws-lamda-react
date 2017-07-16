@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { PageHeader, ListGroup, ListGroupItem, } from 'react-bootstrap';
 import { invokeApig } from '../aws';
-import './Home.css';
+import '../styles/css/Home.css';
 
 class Home extends Component {
 
