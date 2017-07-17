@@ -1,108 +1,91 @@
-import { withRouter } from 'react-router-dom';
-import React, { Component } from 'react';
-import config from '../config.js';
-import '../styles/css/Login.css';
-import {
-    FormGroup,
-    FormControl,
-    ControlLabel,
-} from 'react-bootstrap';
-import {
-  CognitoUserPool,
-  AuthenticationDetails,
-  CognitoUser
-} from 'amazon-cognito-identity-js';
-import LoaderButton from '../components/LoaderButton';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import { Field, reduxForm} from 'redux-form'
+import { getUserToken } from '../actions/index'
+import LoaderButton from '../components/LoaderButton'
+import '../styles/css/Login.css'
+import '../styles/css/App.css'
 
 class Login extends Component {
+
     constructor(props) {
-        super(props);
+        super(props)
 
-        this.state = {
-            isLoading: false,
-            username: '',
-            password: '',
-        };
+        this.state = { isLoading: false }
     }
 
-    login(username, password) {
-        const userPool = new CognitoUserPool({
-            UserPoolId: config.cognito.USER_POOL_ID,
-            ClientId: config.cognito.APP_CLIENT_ID
-        });
+    onSubmit = async (values) => {
 
-        const authenticationData = {
-            Username: username,
-            Password: password
-        };
-
-        const user = new CognitoUser({ Username: username, Pool: userPool });
-        const authenticationDetails = new AuthenticationDetails(authenticationData);
-
-        return new Promise((resolve, reject) => (
-            user.authenticateUser(authenticationDetails, {
-                onSuccess: (result) => resolve(result.getIdToken().getJwtToken()),
-                onFailure: (err) => reject(err),
-            })
-        ));
-    }
-
-    validateForm() {
-        return this.state.username.length > 0 && this.state.password.length > 0;
-    }
-
-    handleChange = (event) => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
-    }
-
-    handleSubmit = async (event) => {
-        event.preventDefault();
-
-        this.setState({ isLoading: true });
+        this.setState({ isLoading: true })
 
         try {
-            const userToken = await this.login(this.state.username, this.state.password);
-            this.props.updateUserToken(userToken);
+            await this.props.getUserToken(values.username, values.password)
+            this.props.history.push('/')
         }
         catch(e) {
-            alert(e);
-            this.setState({ isLoading: false });
+            console.log('Failed to login user: ', e)
+            this.setState({ isLoading: false })
         }
+    }
+
+    renderField(field) {
+        let { meta: { touched, error } } = field
+
+        return (
+            <FormGroup
+                className={`${ touched && error ? 'input-danger' : '' }`}
+                controlId='username'
+                bsSize='large'>
+                <ControlLabel>{field.label}</ControlLabel>
+                <FormControl type={field.type} {...field.input} />
+                <div className={`${ touched && error ? 'alert alert-danger' : '' }`}>
+                    { touched ?  error : '' }
+                </div>
+            </FormGroup>
+        )
     }
 
     render() {
+        let { handleSubmit } = this.props
+
         return (
             <div className="Login">
-                <form onSubmit={this.handleSubmit}>
-                    <FormGroup controlId="username" bsSize="large">
-                        <ControlLabel>Email</ControlLabel>
-                        <FormControl
-                            autoFocus
-                            type="email"
-                            value={this.state.username}
-                            onChange={this.handleChange} />
-                    </FormGroup>
-                    <FormGroup controlId="password" bsSize="large">
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password" />
-                    </FormGroup>
+                <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                    <Field label='Username' name='username' type='text' component={this.renderField} autoFocus />
+                    <Field label='Password' name='password' type='password' component={this.renderField} />
                     <LoaderButton
-                          block
-                          bsSize="large"
-                          disabled={ ! this.validateForm() }
-                          type="submit"
-                          isLoading={this.state.isLoading}
+                          block bsSize="large" type="submit"
+                          isLoading={ this.props.isLoading }
                           text="Login"
                           loadingText="Logging in…" />
                 </form>
             </div>
-        );
+        )
     }
 }
 
-export default withRouter(Login);
+function validate(values) {
+
+    let errors = {}
+
+    errors.username = ( ! values.username) ? 'Must enter a username' : null
+    errors.password = ( ! values.password) ? 'Must enter a password' : null
+
+    return errors
+}
+
+function mapStateToProps(state) {
+    return {
+        userToken: state.userToken,
+    };
+}
+
+export default withRouter(
+    reduxForm(
+        { validate, form: 'LoginForm' }
+    )(connect(
+        mapStateToProps, { getUserToken }
+    )(Login))
+)

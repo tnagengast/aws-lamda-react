@@ -8,6 +8,7 @@ import config from '../config.js';
 import '../styles/css/Signup.css';
 
 class Signup extends Component {
+    
     constructor(props) {
         super(props);
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 import { PageHeader, ListGroup, ListGroupItem, } from 'react-bootstrap';
 import { invokeApig } from '../aws';
 import '../styles/css/Home.css';
@@ -16,7 +17,8 @@ class Home extends Component {
     }
 
     async componentDidMount() {
-        if (this.props.userToken === null) {
+
+        if ( ! this.props.userToken) {
             return;
         }
 
@@ -28,7 +30,7 @@ class Home extends Component {
         }
 
         catch(e) {
-            alert(e);
+            console.error('Failed to fetch notes in Home container: ' + e);
         }
 
         this.setState({ isLoading: false });
@@ -89,10 +91,19 @@ class Home extends Component {
     render() {
         return (
             <div className="Home">
-                { this.props.userToken === null ? this.renderLander() : this.renderNotes() }
+                { this.props.userToken ? this.renderNotes() : this.renderLander() }
+                { this.props.userToken ? console.log('user token exists') : console.log('no user token') }
             </div>
         );
     }
 }
 
-export default withRouter(Home);
+function mapStateToProps(state) {
+    return {
+        userToken: state.userToken
+    };
+}
+
+export default withRouter(
+    connect(mapStateToProps)(Home)
+)
