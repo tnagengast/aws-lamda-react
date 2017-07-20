@@ -3,37 +3,39 @@ import RouteNavItem from './components/RouteNavItem'
 import { Link, withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import AWS from 'aws-sdk'
 import config from './config.js'
-import { CognitoUserPool, } from 'amazon-cognito-identity-js'
-import Routes from './Routes'
-// import NoteList from './containers/NoteList'
-// import NoteDetail from './containers/NoteDetail'
+import { CognitoUserPool } from 'amazon-cognito-identity-js'
+import Routes from './routes'
 import './styles/css/App.css'
+
+// TODO Update other modules
+// import { updateUserToken } from './actions/index.js'
+import * as actions from './actions';
 
 class App extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
-            userToken: null,
             isLoadingUserToken: true,
         }
     }
 
     async componentDidMount() {
-        const currentUser = this.getCurrentUser()
+        let currentUser = this.getCurrentUser();
+        
+        // console.log('current user (App): ', currentUser);
 
         if ( ! currentUser) {
-            this.setState({isLoadingUserToken: false})
+            this.setState({isLoadingUserToken: false});
             return
         }
 
         try {
-            const userToken = await this.getUserToken(currentUser)
-            this.updateUserToken(userToken)
+            let userToken = await this.getUserToken(currentUser);
+            this.props.updateUserToken(userToken)
         }
         catch(e) {
             console.log('Failed to get userToken in App: ', e)
@@ -42,22 +44,16 @@ class App extends Component {
         this.setState({isLoadingUserToken: false})
     }
 
-    updateUserToken = (userToken) => {
-        this.setState({
-            userToken: userToken
-        })
-    }
-
     handleNavLink = (event) => {
-        event.preventDefault()
+        event.preventDefault();
 
         this.props.history.push(event.currentTarget.getAttribute('href'))
-    }
+    };
 
     handleLogout = (event) => {
-        const currentUser = this.getCurrentUser()
+        let currentUser = this.getCurrentUser();
 
-        if (currentUser !== null) {
+        if ( ! currentUser) {
             currentUser.signOut()
         }
 
@@ -65,16 +61,16 @@ class App extends Component {
             AWS.config.credentials.clearCachedId()
         }
 
-        this.updateUserToken(null)
+        // this.updateUserToken(null)
 
         this.props.history.push('/login')
-    }
+    };
 
     getCurrentUser() {
-        const userPool = new CognitoUserPool({
+        let userPool = new CognitoUserPool({
             UserPoolId: config.cognito.USER_POOL_ID,
             ClientId: config.cognito.APP_CLIENT_ID
-        })
+        });
 
         return userPool.getCurrentUser()
     }
@@ -83,7 +79,7 @@ class App extends Component {
         return new Promise((resolve, reject) => {
             currentUser.getSession(function(err, session) {
                 if (err) {
-                    reject(err)
+                    reject(err);
                     return
                 }
 
@@ -93,11 +89,12 @@ class App extends Component {
     }
 
     render() {
-        const childProps = {
+
+        let childProps = { // TODO convert this to redux state
             userToken: this.props.userToken,
             updateUserToken: this.updateUserToken,
-        }
-
+        };
+        
         return ! this.state.isLoadingUserToken && (
             <div className="App container">
                 <Navbar fluid collapseOnSelect>
@@ -110,7 +107,7 @@ class App extends Component {
                     <Navbar.Collapse>
                         <Nav pullRight>
                         {
-                            this.state.userToken
+                            this.props.userToken
                             ? <NavItem onClick={ this.handleLogout }>Logout</NavItem>
                             : [
                                 <RouteNavItem key={ 1 } onClick={ this.handleNavLink } href="/signup">Signup</RouteNavItem>,
@@ -128,16 +125,14 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
+    // console.log('state (app): ', state);
+    
     return {
+        userToken: state.userToken,
         notes: state.notes
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateUserToken: this.updateUserToken }, dispatch)
-}
-
-export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App))
+export default withRouter(
+    connect(mapStateToProps, actions)(App)
+)

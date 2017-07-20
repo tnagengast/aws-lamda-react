@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 import { Field, reduxForm} from 'redux-form'
-import { getUserToken } from '../actions/index'
+import * as actions from '../actions'
 import LoaderButton from '../components/LoaderButton'
 import '../styles/css/Login.css'
 import '../styles/css/App.css'
@@ -86,6 +86,6 @@ export default withRouter(
     reduxForm(
         { validate, form: 'LoginForm' }
     )(connect(
-        mapStateToProps, { getUserToken }
+        mapStateToProps, actions
     )(Login))
 )

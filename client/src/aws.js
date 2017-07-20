@@ -10,11 +10,15 @@ export async function invokeApig( { path, method = 'GET', body }, userToken) {
 
     body = (body) ? JSON.stringify(body) : body;
 
+    // console.log('notes url: ', url); // TODO remvoe console.log
+    
     const results = await fetch(url, { method, body, headers });
 
     if (results.status !== 200) {
         throw new Error(await results.text());
     }
+    
+    // console.log('check notes response: ', results.json()); // TODO Remove console.log
 
     return results.json();
 }
