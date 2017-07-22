@@ -8,7 +8,7 @@ export async function main(event, context, callback) {
         TableName: 'notes',
         KeyConditionExpression: "user_id = :user_id",
         ExpressionAttributeValues: {
-            ":user_id": event.requestContext.authorizer.claims.sub,
+            ":user_id": event.requestContext.identity.cognitoIdentityId,
         }
     };
 

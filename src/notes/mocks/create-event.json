@@ -1,10 +1,8 @@
 {
     "body": "{\"content\":\"hello world\",\"attachment\":\"hello.jpg\"}",
     "requestContext": {
-        "authorizer": {
-            "claims": {
-                "sub": "7dde98dd-28b9-4d27-a50b-b84b91a64d94"
-            }
+        "identity": {
+            "cognitoIdentityId": "Refactor Test User"
         }
     }
 }

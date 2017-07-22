@@ -111,7 +111,7 @@ class Home extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log('state (home): ', state);
+    // console.log('state (home): ', state); // TODO remove console.log
     
     return {
         userToken: state.userToken,

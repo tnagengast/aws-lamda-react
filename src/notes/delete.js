@@ -7,7 +7,7 @@ export async function main(event, context, callback) {
     const params = {
         TableName: 'notes',
         Key: {
-            user_id: event.requestContext.authorizer.claims.sub,
+            user_id: event.requestContext.identity.cognitoIdentityId,
             note_id: event.pathParameters.id,
         },
     };

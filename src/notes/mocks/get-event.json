@@ -1,12 +1,10 @@
 {
     "pathParameters": {
-        "id": "83f5c990-69c0-11e7-86d5-63c9cab983b1"
+        "id": "52b3e830-6e84-11e7-b38f-4100e37efc79"
     },
     "requestContext": {
-        "authorizer": {
-            "claims": {
-                "sub": "7dde98dd-28b9-4d27-a50b-b84b91a64d94"
-            }
+        "identity": {
+            "cognitoIdentityId": "Refactor Test User"
         }
     }
 }

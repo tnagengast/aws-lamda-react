@@ -1,29 +1,86 @@
 import config from './config.js';
 import AWS from 'aws-sdk';
+import axios from 'axios';
+import sigV4Client from './sigV4Client';
 
-export async function invokeApig( { path, method = 'GET', body }, userToken) {
-    const url = `${config.apiGateway.URL}${path}`;
+export async function invoke({
+         url, method = 'GET', headers = {}, queryParams = {}, data 
+     }, userToken) {
 
-    const headers = {
-        Authorization: userToken,
-    };
-
-    body = (body) ? JSON.stringify(body) : body;
-
-    // console.log('notes url: ', url); // TODO remvoe console.log
+    // TODO placeholders until refactor
+    let path = url;
+    let body = data;
     
-    const results = await fetch(url, { method, body, headers });
+    await getAwsCredentials(userToken);
 
-    if (results.status !== 200) {
-        throw new Error(await results.text());
-    }
+    const signedRequest = sigV4Client
+        .newClient({
+            accessKey: AWS.config.credentials.accessKeyId,
+            secretKey: AWS.config.credentials.secretAccessKey,
+            sessionToken: AWS.config.credentials.sessionToken,
+            region: config.apiGateway.REGION,
+            endpoint: config.apiGateway.URL,
+        })
+        .signRequest({ method, path, headers, queryParams, body });
+
+    console.log('sig: ', signedRequest); // TODO remove console.log
     
-    // console.log('check notes response: ', results.json()); // TODO Remove console.log
-
-    return results.json();
+    data = data ? JSON.stringify(data) : data;
+    headers = signedRequest.headers;
+    console.dir({
+        url: signedRequest.url,
+        method: method,
+        headers: headers,
+    }); // TODO remove console.dir
+    
+    axios({
+        url: signedRequest.url,
+        method: method,
+        headers: headers,
+    }).then((response) => {
+        console.log('success: ', response); // TODO remove console.log
+        return response.data
+    }).catch((error) => {
+        console.error('error: ', error); // TODO remove console.log
+    })
 }
 
-export function getAwsCredentials(userToken) {
+// export async function invoke({ url, method = 'GET', data }, Authorization) {
+//
+//     await getAwsCredentials(Authorization);
+//     const signedRequest = sigV4Client
+//         .newClient({
+//             accessKey: AWS.config.credentials.accessKeyId,
+//             secretKey: AWS.config.credentials.secretAccessKey,
+//             sessionToken: AWS.config.credentials.sessionToken,
+//             region: config.apiGateway.REGION,
+//             endpoint: config.apiGateway.URL,
+//         })
+//         .signRequest({
+//             method,
+//             path,
+//             headers,
+//             queryParams,
+//             body
+//         });
+//
+//     axios.defaults.headers.common['Authorization'] = Authorization;
+//     axios.defaults.baseURL = config.apiGateway.URL;
+//
+//     data = (data) ? JSON.stringify(data) : data; // for full text ish
+//
+//     axios({ method, url, data }).then((response) => {
+//         return response.data;
+//     }).catch((error) => {
+//         console.error(error);
+//     })
+// }
+
+export function getAwsCredentials(token) {
+    if (AWS.config.credentials && Date.now() < AWS.config.credentials.expireTime - 60000) {
+        return;
+    }
+
     const authenticator = `cognito-idp.${config.cognito.REGION}.amazonaws.com/${config.cognito.USER_POOL_ID}`;
 
     AWS.config.update({ region: config.cognito.REGION });
@@ -31,7 +88,7 @@ export function getAwsCredentials(userToken) {
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: config.cognito.IDENTITY_POOL_ID,
         Logins: {
-            [authenticator]: userToken
+            [authenticator]: token
         }
     });
 
@@ -41,13 +98,13 @@ export function getAwsCredentials(userToken) {
 export async function s3Upload(file, userToken) {
     await getAwsCredentials(userToken);
 
-    const s3 = new AWS.S3({
+    let s3 = new AWS.S3({
         params: {
             Bucket: config.s3.BUCKET,
         }
     });
 
-    const filename = `${AWS.config.credentials.identityId}-${Date.now()}-${file.name}`;
+    let filename = `${AWS.config.credentials.identityId}-${Date.now()}-${file.name}`;
 
     return s3.upload({
         Key: filename,

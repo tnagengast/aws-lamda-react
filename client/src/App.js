@@ -125,8 +125,6 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-    // console.log('state (app): ', state);
-    
     return {
         userToken: state.userToken,
         notes: state.notes

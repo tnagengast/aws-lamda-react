@@ -4,7 +4,15 @@ import { FormGroup, FormControl, ControlLabel, } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
 import '../styles/css/NewNote.css';
-import { invokeApig, s3Upload } from '../aws';
+import { invoke, s3Upload } from '../aws';
+import { connect } from 'react-redux'
+import * as actions from '../actions';
+
+/*
+    TODO move to redux-form
+    TODO implement actions
+ */
+
 
 class NewNote extends Component {
     constructor(props) {
@@ -18,8 +26,9 @@ class NewNote extends Component {
         };
     }
 
-    validateForm() {
-        return this.state.content.length > 0;
+    componentDidMount() {
+        // console.log(this.props.userToken); // TODO remove console.log
+
     }
 
     handleChange = (event) => {
@@ -43,7 +52,7 @@ class NewNote extends Component {
         this.setState({ isLoading: true });
 
         try {
-            const uploadedFilename = (this.file)
+            let uploadedFilename = (this.file)
                 ? (await s3Upload(this.file, this.props.userToken)).Location
                 : null;
 
@@ -55,16 +64,17 @@ class NewNote extends Component {
             this.props.history.push('/');
         }
         catch(e) {
-            alert(e);
+            console.log(e); // TODO handle error
+
             this.setState({ isLoading: false });
         }
     }
 
     createNote(note) {
-        return invokeApig({
-            path: '/notes',
+        return invoke({
+            url: '/notes',
             method: 'POST',
-            body: note,
+            data: note,
         }, this.props.userToken);
     }
 
@@ -88,7 +98,6 @@ class NewNote extends Component {
                         block
                         bsStyle="primary"
                         bsSize="large"
-                        disabled={ ! this.validateForm() }
                         type="submit"
                         isLoading={this.state.isLoading}
                         text="Create"
@@ -99,4 +108,12 @@ class NewNote extends Component {
     }
 }
 
-export default withRouter(NewNote);
+function mapStateToProps(state) {
+    return {
+        userToken: state.userToken,
+    }
+}
+
+export default withRouter(
+    connect(mapStateToProps, actions)(NewNote)
+)

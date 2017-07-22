@@ -31,8 +31,7 @@ functions:
                 path: notes
                 method: post
                 cors: true
-                authorizer:
-                    arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
+                authorizer: aws_iam
 
     notes-get:
         handler: notes-get.main
@@ -41,8 +40,7 @@ functions:
                 path: notes/{id}
                 method: get
                 cors: true
-                authorizer:
-                    arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
+                authorizer: aws_iam
 
     notes-list:
         handler: notes-list.main
@@ -51,8 +49,7 @@ functions:
                 path: notes
                 method: get
                 cors: true
-                authorizer:
-                    arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
+                authorizer: aws_iam
 
     notes-update:
         handler: notes-update.main
@@ -61,8 +58,7 @@ functions:
                 path: notes/{id}
                 method: put
                 cors: true
-                authorizer:
-                    arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
+                authorizer: aws_iam
 
     notes-delete:
         handler: notes-delete.main
@@ -71,5 +67,4 @@ functions:
                 path: notes/{id}
                 method: delete
                 cors: true
-                authorizer:
-                    arn: arn:aws:cognito-idp:us-west-2:655205504557:userpool/us-west-2_pdeQDEDo4
+                authorizer: aws_iam

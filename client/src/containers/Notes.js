@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { invokeApig, s3Upload } from '../aws';
+import { invoke, s3Upload } from '../aws';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
@@ -34,7 +34,7 @@ class Notes extends Component {
     }
 
     getNote() {
-        return invokeApig({ path: `/notes/${this.props.match.params.id}` }, this.props.userToken);
+        return invoke({ path: `/notes/${this.props.match.params.id}` }, this.props.userToken);
     }
 
     validateForm() {
@@ -57,7 +57,7 @@ class Notes extends Component {
     }
 
     saveNote(note) {
-        return invokeApig({
+        return invoke({
             path: `/notes/${this.props.match.params.id}`,
             method: 'PUT',
             body: note,
@@ -96,7 +96,7 @@ class Notes extends Component {
     }
 
     deleteNote() {
-        return invokeApig({
+        return invoke({
             path: `/notes/${this.props.match.params.id}`,
             method: 'DELETE',
         }, this.props.userToken);

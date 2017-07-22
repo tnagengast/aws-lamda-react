@@ -4,16 +4,16 @@ import * as dynamoDbLib from '../dynamodb';
 // test: sls webpack invoke --function notes-get --path src/notes/mocks/get-event.json
 export async function main(event, context, callback) {
 
-    const params = {
+    let params = {
         TableName: 'notes',
         Key: {
-            user_id: event.requestContext.authorizer.claims.sub,
+            user_id: event.requestContext.identity.cognitoIdentityId,
             note_id: event.pathParameters.id,
         },
     };
 
     try {
-        const result = await dynamoDbLib.call('get', params);
+        let result = await dynamoDbLib.call('get', params);
 
         if (result.Item) {
             callback(null, success(result.Item));
