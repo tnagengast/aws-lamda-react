@@ -3,15 +3,12 @@ import RouteNavItem from './components/RouteNavItem'
 import { Link, withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import AWS from 'aws-sdk'
 import config from './config.js'
 import { CognitoUserPool } from 'amazon-cognito-identity-js'
 import Routes from './routes'
 import './styles/css/App.css'
-
-// TODO Update other modules
-// import { updateUserToken } from './actions/index.js'
 import * as actions from './actions';
+import AWS from 'aws-sdk';
 
 class App extends Component {
 
@@ -26,8 +23,6 @@ class App extends Component {
     async componentDidMount() {
         let currentUser = this.getCurrentUser();
         
-        // console.log('current user (App): ', currentUser);
-
         if ( ! currentUser) {
             this.setState({isLoadingUserToken: false});
             return
@@ -53,15 +48,14 @@ class App extends Component {
     handleLogout = (event) => {
         let currentUser = this.getCurrentUser();
 
-        if ( ! currentUser) {
+        if (currentUser) {
             currentUser.signOut()
         }
-
         if (AWS.config.credentials) {
-            AWS.config.credentials.clearCachedId()
+            AWS.config.credentials.clearCachedId();
         }
 
-        // this.updateUserToken(null)
+        this.props.updateUserToken(null)
 
         this.props.history.push('/login')
     };

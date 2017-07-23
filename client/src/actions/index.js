@@ -4,12 +4,12 @@ import {
   GET_USER_TOKEN,
   UPDATE_USER_TOKEN,
 } from './types'
-
 import {
     CognitoUserPool,
     AuthenticationDetails,
     CognitoUser
 } from 'amazon-cognito-identity-js'
+import axios from 'axios';
 import { invoke } from '../aws';
 import config from '../config.js'
 
@@ -32,11 +32,23 @@ export function notesShow(payload) {
     return { type: NOTES_SHOW, payload }
 }
 
-export function notesIndex(token) {
-    let payload = invoke({ url: '/notes' }, token);
+export async function notesIndex(token) {
 
-    return { type: NOTES_INDEX, payload }
+    let sig = invoke({ url: '/notes' }, token)
+
+    return sig.then((signedRequest) => {
+        return {
+            type: NOTES_INDEX,
+            payload: axios.get(signedRequest.url, { headers: signedRequest.headers })
+        }
+    })
 }
+
+// export function notesIndex(token) {
+//     console.log('testing notesIndex action'); // TODO remove console.log
+//
+//     return { type: NOTES_INDEX, payload: '' }
+// }
 
 export function getUserToken(username, password) {
     let payload = login(username, password);

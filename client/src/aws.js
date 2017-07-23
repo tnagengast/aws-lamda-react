@@ -1,19 +1,15 @@
 import config from './config.js';
 import AWS from 'aws-sdk';
-import axios from 'axios';
 import sigV4Client from './sigV4Client';
 
-export async function invoke({
-         url, method = 'GET', headers = {}, queryParams = {}, data 
-     }, userToken) {
-
+export async function invoke({ url, method = 'GET', headers = {}, queryParams = {}, data }, userToken) {
     // TODO placeholders until refactor
     let path = url;
     let body = data;
     
     await getAwsCredentials(userToken);
-
-    const signedRequest = sigV4Client
+    
+    return sigV4Client
         .newClient({
             accessKey: AWS.config.credentials.accessKeyId,
             secretKey: AWS.config.credentials.secretAccessKey,
@@ -22,59 +18,9 @@ export async function invoke({
             endpoint: config.apiGateway.URL,
         })
         .signRequest({ method, path, headers, queryParams, body });
-
-    console.log('sig: ', signedRequest); // TODO remove console.log
     
-    data = data ? JSON.stringify(data) : data;
-    headers = signedRequest.headers;
-    console.dir({
-        url: signedRequest.url,
-        method: method,
-        headers: headers,
-    }); // TODO remove console.dir
-    
-    axios({
-        url: signedRequest.url,
-        method: method,
-        headers: headers,
-    }).then((response) => {
-        console.log('success: ', response); // TODO remove console.log
-        return response.data
-    }).catch((error) => {
-        console.error('error: ', error); // TODO remove console.log
-    })
+    // data = data ? JSON.stringify(data) : data;
 }
-
-// export async function invoke({ url, method = 'GET', data }, Authorization) {
-//
-//     await getAwsCredentials(Authorization);
-//     const signedRequest = sigV4Client
-//         .newClient({
-//             accessKey: AWS.config.credentials.accessKeyId,
-//             secretKey: AWS.config.credentials.secretAccessKey,
-//             sessionToken: AWS.config.credentials.sessionToken,
-//             region: config.apiGateway.REGION,
-//             endpoint: config.apiGateway.URL,
-//         })
-//         .signRequest({
-//             method,
-//             path,
-//             headers,
-//             queryParams,
-//             body
-//         });
-//
-//     axios.defaults.headers.common['Authorization'] = Authorization;
-//     axios.defaults.baseURL = config.apiGateway.URL;
-//
-//     data = (data) ? JSON.stringify(data) : data; // for full text ish
-//
-//     axios({ method, url, data }).then((response) => {
-//         return response.data;
-//     }).catch((error) => {
-//         console.error(error);
-//     })
-// }
 
 export function getAwsCredentials(token) {
     if (AWS.config.credentials && Date.now() < AWS.config.credentials.expireTime - 60000) {

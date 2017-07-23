@@ -3,6 +3,9 @@ import { withRouter } from 'react-router-dom';
 import { HelpBlock, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { AuthenticationDetails, CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js';
 
+import { connect } from 'react-redux'
+import { Field, reduxForm} from 'redux-form'
+import * as actions from '../actions'
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
 import '../styles/css/Signup.css';
@@ -154,6 +157,9 @@ class Signup extends Component {
     renderForm() {
         return (
             <form onSubmit={this.handleSubmit}>
+
+                <Field name='test' type='hidden'/>
+
                 <FormGroup controlId="username" bsSize="large">
                     <ControlLabel>Email</ControlLabel>
                     <FormControl
@@ -201,4 +207,26 @@ class Signup extends Component {
     }
 }
 
-export default withRouter(Signup);
+// export default withRouter(Signup);
+
+function validate(values) {
+
+    let errors = {}
+
+    errors.username = ( ! values.username) ? 'Must enter a username' : null
+    errors.password = ( ! values.password) ? 'Must enter a password' : null
+
+    return errors
+}
+
+function mapStateToProps(state) {
+    return {
+        userToken: state.userToken,
+    };
+}
+
+export default withRouter(
+    reduxForm(
+        { validate, form: 'SignUpForm' }
+    )(connect(mapStateToProps, actions)(Signup))
+)

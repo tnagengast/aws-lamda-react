@@ -1,6 +1,6 @@
 import {
     NOTES_SHOW,
-    NOTES_INDEX
+    NOTES_INDEX,
 } from '../actions/types';
 
 export default function(state = {}, action) {
@@ -9,7 +9,9 @@ export default function(state = {}, action) {
     case NOTES_SHOW:
         return { ...state };
     case NOTES_INDEX:
-        return { ...state, notes: action.payload };
+        console.log('notesIndex reducer: ', action.payload.data); // TODO remove console.log
+        
+        return { ...state, notes: action.payload.data };
     default:
         return state;
     }

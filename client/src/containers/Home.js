@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { PageHeader, ListGroup, ListGroupItem, } from 'react-bootstrap'
-import { notesIndex } from '../actions/index'
+// import * as actions from '../actions';
+import { notesIndex } from '../actions';
 import '../styles/css/Home.css'
 
 function isEmpty(obj) {
@@ -29,7 +30,7 @@ class Home extends Component {
         this.setState({ isLoading: true })
 
         try {
-            await notesIndex(this.props.userToken) // TODO This is broken...
+            await this.props.notesIndex(this.props.userToken) // TODO This is broken...
         }
         catch(e) {
             console.error('Failed to fetch notes in Home container: ' + e)
@@ -39,6 +40,10 @@ class Home extends Component {
     }
 
     renderNotesList(notes) {
+        /*
+            TODO render the array of note objects correctly
+         */
+        
         return isEmpty(notes) ?
                 <ListGroupItem
                     key="new"
@@ -48,28 +53,12 @@ class Home extends Component {
                 </ListGroupItem>
             : [{}].concat(notes).map((note, i) => (
                 <ListGroupItem
-                    key={note.noteId}
-                    href={`/notes/${note.note_id}`}
+                    key={note[0].noteId}
+                    href={`/notes/${note[0].note_id}`}
                     onClick={this.handleNoteClick}
-                    header={note.content.trim().split('\n')[0]}>
-                    { "Created: " + (new Date(note.created_at)).toLocaleString() }
+                    header={note[0].content.trim().split('\n')[0]}>
+                    { "Created: " + (new Date(note[0].created_at)).toLocaleString() }
                 </ListGroupItem>))
-        // return [{}].concat(notes).map((note, i) => (
-        //     i ? (
-        //         <ListGroupItem
-        //             key={note.noteId}
-        //             href={`/notes/${note.note_id}`}
-        //             onClick={this.handleNoteClick}
-        //             header={note.content.trim().split('\n')[0]}>
-        //             { "Created: " + (new Date(note.created_at)).toLocaleString() }
-        //         </ListGroupItem> )
-        //     : ( <ListGroupItem
-        //             key="new"
-        //             href="/notes/new"
-        //             onClick={this.handleNoteClick}>
-        //             <h4><b>{'\uFF0B'}</b> Create a new note</h4>
-        //         </ListGroupItem> )
-        // ))
     }
 
     handleNoteClick = (event) => {
@@ -111,8 +100,6 @@ class Home extends Component {
 }
 
 function mapStateToProps(state) {
-    // console.log('state (home): ', state); // TODO remove console.log
-    
     return {
         userToken: state.userToken,
         notes: state.notes,
@@ -120,5 +107,6 @@ function mapStateToProps(state) {
 }
 
 export default withRouter(
-    connect(mapStateToProps)(Home)
+    // connect(mapStateToProps, actions)(Home)
+    connect(mapStateToProps, { notesIndex })(Home)
 )

@@ -4,7 +4,8 @@ import { FormGroup, FormControl, ControlLabel, } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
 import '../styles/css/NewNote.css';
-import { invoke, s3Upload } from '../aws';
+import { invoke } from '../aws'; // TODO get s3Upload reconnected
+// import { invoke, s3Upload } from '../aws';
 import { connect } from 'react-redux'
 import * as actions from '../actions';
 
@@ -52,13 +53,14 @@ class NewNote extends Component {
         this.setState({ isLoading: true });
 
         try {
-            let uploadedFilename = (this.file)
-                ? (await s3Upload(this.file, this.props.userToken)).Location
-                : null;
+            // let uploadedFilename = (this.file)
+            //     ? (await s3Upload(this.file, this.props.userToken)).Location
+            //     : null;
 
             await this.createNote({
                 content: this.state.content,
-                attachment: uploadedFilename,
+                // attachment: uploadedFilename,
+                attachment: null,
             });
 
             this.props.history.push('/');
